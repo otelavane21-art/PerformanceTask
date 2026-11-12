@@ -10,46 +10,51 @@ public class Performance {
 
     public static void main(String[] args)
     {
-        List<Thread> threads = new ArrayList<>();
-        List<PrimeRunnable> tasks = new ArrayList<>();
-
-        long startTime = System.currentTimeMillis();
-
-        for (int i = 0; i < NUM_THREADS; i++)
-        {
-            int start = (i * RANGE_PER_THREAD) + 1;
-            int end = (i + 1) * RANGE_PER_THREAD;
-
-            PrimeRunnable task = new PrimeRunnable(start, end);
-            Thread thread = new Thread(task);
-
-            tasks.add(task);
-            threads.add(thread);
-
-            // Start the thread
-            thread.start();
-        }
-
-        for (Thread thread : threads) {
-            try {
-                thread.join(); // Blocks until this specific thread dies
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-
-        // 3. Tally up the total count from each task instance
-        long totalPrimeCount = 0;
-        for (PrimeRunnable task : tasks)
-        {
-            totalPrimeCount += task.getPrimeCount();
-        }
-
-        long endTime = System.currentTimeMillis();
-
-        System.out.println("Total numbers found between 1 and 1,000,000: " + totalPrimeCount);
-        System.out.println("Time taken: " + (endTime - startTime) + " ms");
+        singleThreadTime();
     }
+
+    public static void singleThreadTime()
+    {
+		List<Thread> threads = new ArrayList<>();
+		List<PrimeRunnable> tasks = new ArrayList<>();
+
+		long startTime = System.currentTimeMillis();
+
+		for (int i = 0; i < NUM_THREADS; i++)
+		{
+			int start = (i * RANGE_PER_THREAD) + 1;
+			int end = (i + 1) * RANGE_PER_THREAD;
+
+			PrimeRunnable task = new PrimeRunnable(start, end);
+			Thread thread = new Thread(task);
+
+			tasks.add(task);
+			threads.add(thread);
+
+			// Start the thread
+			thread.start();
+		}
+
+		for (Thread thread : threads) {
+			try {
+				thread.join(); // Blocks until this specific thread dies
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+
+		// 3. Tally up the total count from each task instance
+		long totalPrimeCount = 0;
+		for (PrimeRunnable task : tasks)
+		{
+			totalPrimeCount += task.getPrimeCount();
+		}
+
+		long endTime = System.currentTimeMillis();
+
+		System.out.println("Total numbers found between 1 and 1,000,000: " + totalPrimeCount);
+        System.out.println("Time taken: " + (endTime - startTime) + " ms");
+	}
 
     // Task implementing Runnable
     static class PrimeRunnable implements Runnable {
